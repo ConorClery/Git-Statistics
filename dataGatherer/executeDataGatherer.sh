@@ -1,2 +1,1 @@
-source venv/bin/activate
-python3 executeDataGatherer.py
+python3 gatherer.py $(< urls.txt)
