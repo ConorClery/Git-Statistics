@@ -3,6 +3,16 @@ import requests
 import sys
 import getpass
 import json
+from firebase import firebase
+
+
+def processData( data ):
+    print(data["bio"])
+    str = data["bio"]
+    str = str.lower()
+    if "student" and "trinity" and "dublin" in str:
+        return True
+
 
 github = 'https://api.github.com/'
 user = ''
@@ -25,4 +35,12 @@ for i, endpoint in enumerate(sys.argv):
         contentType = r.headers['Content-Type'].split(';')
         if contentType[0] == 'application/json':
             data = r.json()
-            print('Recieved data: ', json.dumps(data, sort_keys=True, indent=4))
+            if processData(data) is True:
+                print("Tis true!")
+                #langdata = getUserStats(data)
+                #postToFirebase(langdata)
+            #print('Recieved data: ', json.dumps(data, sort_keys=True, indent=4))
+
+#firebase = firebase.FirebaseApplication('https://swengdb.firebaseio.com/', None)
+#result = firebase.get('/users', None)
+#print(result)
