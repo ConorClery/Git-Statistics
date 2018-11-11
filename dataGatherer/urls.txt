@@ -1,4 +1,1 @@
-users/ConorClery
-users/cullenMichael
-users/SeanCandon
-users/pkjennings999
+search/users?q=location:ireland&per_page=100

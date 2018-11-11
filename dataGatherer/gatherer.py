@@ -14,6 +14,8 @@ def processData( data ):
         return True
 
 
+
+firebaseEndpoint = 'https://swengdb.firebaseio.com/'
 github = 'https://api.github.com/'
 user = ''
 pw = ''
@@ -27,20 +29,24 @@ for i, endpoint in enumerate(sys.argv):
         print('\nURL', i, ': ', github, endpoint)
         URL = github + endpoint
         # defining a params dict for the parameters to be sent to the API
-        PARAMS = {'Content-Type':'application/json'}
+        PARAMS = {'Content-Type':'application/json', 'location':'ireland'}
         # sending get request and saving the response as response object
-        r = requests.get(url = URL, params = PARAMS, auth =( user, pw ))
-        print(r.status_code)
-        #print(r.headers)
-        contentType = r.headers['Content-Type'].split(';')
-        if contentType[0] == 'application/json':
-            data = r.json()
-            if processData(data) is True:
-                print("Tis true!")
-                #langdata = getUserStats(data)
-                #postToFirebase(langdata)
-            #print('Recieved data: ', json.dumps(data, sort_keys=True, indent=4))
+        j = 0
+        while j < 10:
+            page = '&page=' + str(j)
+            r = requests.get(url = URL + (page), params = PARAMS, auth =( user, pw ))
+            print(r.status_code)
+            contentType = r.headers['Content-Type'].split(';')
+            if contentType[0] == 'application/json':
+                data = r.json()
+                #print('Recieved data: ', json.dumps(data, sort_keys=True, indent=4))
+            print(j)
+            j = j + 1
+                #if processData(data) is True:
+                    #print("Tis true!")
+                    #langdata = getUserStats(data)
+                    #postToFirebase(langdata)
 
-#firebase = firebase.FirebaseApplication('https://swengdb.firebaseio.com/', None)
+#firebase = firebase.FirebaseApplication(firebaseEndpoint, None)
 #result = firebase.get('/users', None)
 #print(result)
