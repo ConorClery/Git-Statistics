@@ -21,12 +21,6 @@ app.set('view engine', 'ejs');
 let home_page_routes = require('./routes/home.js');
 router.get('/', home_page_routes);
 
-//Error Routes
-router.get('*', (req,res) => {
-	console.log('missing-page');
-	res.render(__dirname + '/public/page/missing-page');
-});
-
 //Apply the routes to our application
 app.use('/', router);
 

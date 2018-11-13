@@ -1,11 +1,12 @@
 {
   "name": "frontend-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "Frontend server for rendering data located in swengdb.firebase.io",
   "main": "index.js",
+  "author":"Conor Clery",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"    
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
