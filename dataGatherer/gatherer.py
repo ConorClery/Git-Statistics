@@ -13,16 +13,24 @@ repoData = []
 
 
 def processRepoData( data ):
-    num = 0
     dataLength = len(data["items"])
+    print("Current Data Progress: 0/", dataLength)
     for element in data["items"]:
+        numOut = 0
+        num = 0
         repUrl = element["repos_url"]
         repoData = getRepoData( repUrl )
+        repoLength = len(repoData)
+        print("Posting data from", repoLength, "repositories...")
+        print("Current User Progress: 0/", repoLength)
         for repo in repoData:
             getAndPostRepoLanguageData(repo["owner"]["login"], repo["name"])
-        num = num + 1
-        woops = str(num) + '/' + str(dataLength)
-        print("Current User Progress:", woops)
+            num = num + 1
+            woops = str(num) + '/' + str(repoLength)
+            print("Current User Progress:", woops)
+        numOut = numOut + 1
+        noops = str(numOut) + "/" + str(dataLength)
+        print("Current Data Progress:", noops)
     return
 
 def getRepoData( repUrl ):
@@ -34,10 +42,7 @@ def getAndPostRepoLanguageData(owner, name):
     langUrl = github + 'repos/' + owner + '/' + name +'/languages'
     PARAMS = {'Content-Type':'application/json'}
     r = requests.get(url = langUrl, params = PARAMS, auth =( user, pw ))
-    langsToPost = []
-    for language in r.json():
-        langsToPost.append(language)
-    fireData = {'progLangs' : langsToPost, 'owner': owner, 'repo_name' : name }
+    fireData = {'progLangs' : r.json(), 'owner': owner, 'repo_name' : name }
     sent = json.dumps(fireData)
     result = firebase.post("/languageData", sent)
     return
@@ -55,7 +60,7 @@ for i, endpoint in enumerate(sys.argv):
         PARAMS = {'Content-Type':'application/json'}
         # sending get request and saving the response as response object
         j = 0
-        limit = 10
+        limit = 5
         prog = ''
         while j < limit:
             prog = str(j) + '/' + str(limit)

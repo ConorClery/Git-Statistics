@@ -1,1 +1,2 @@
 /dataGatherer/venv/*
+/frontend-server/node_modules/*
