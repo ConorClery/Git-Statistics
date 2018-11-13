@@ -10,14 +10,12 @@ github = 'https://api.github.com/'
 user = ''
 pw = ''
 repoData = []
-id = 0
 
 
 def processRepoData( data ):
     num = 0
     dataLength = len(data["items"])
     for element in data["items"]:
-        print(element["repos_url"])
         repUrl = element["repos_url"]
         repoData = getRepoData( repUrl )
         for repo in repoData:
@@ -36,9 +34,10 @@ def getAndPostRepoLanguageData(owner, name):
     langUrl = github + 'repos/' + owner + '/' + name +'/languages'
     PARAMS = {'Content-Type':'application/json'}
     r = requests.get(url = langUrl, params = PARAMS, auth =( user, pw ))
-    print("posting to db...")
-    id = id + 1
-    fireData = {'id' : id, 'progLangs' : r.json()}
+    langsToPost = []
+    for language in r.json():
+        langsToPost.append(language)
+    fireData = {'progLangs' : langsToPost, 'owner': owner, 'repo_name' : name }
     sent = json.dumps(fireData)
     result = firebase.post("/languageData", sent)
     return
@@ -56,7 +55,7 @@ for i, endpoint in enumerate(sys.argv):
         PARAMS = {'Content-Type':'application/json'}
         # sending get request and saving the response as response object
         j = 0
-        limit = 1
+        limit = 10
         prog = ''
         while j < limit:
             prog = str(j) + '/' + str(limit)
@@ -71,7 +70,4 @@ for i, endpoint in enumerate(sys.argv):
                 processRepoData(data)
             j = j + 1
         prog = str(limit) + '/' + str(limit)
-        print("Done!")
-
-#result = firebase.get('/users', None)
-#print(result)
+print("Done!")
