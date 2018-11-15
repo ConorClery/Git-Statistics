@@ -9,8 +9,7 @@ firebase = firebase.FirebaseApplication(firebaseEndpoint, None)
 github = 'https://api.github.com/'
 user = ''
 pw = ''
-repoData = []
-
+dataObj = {}
 
 def processRepoData( data ):
     dataLength = len(data["items"])
@@ -42,10 +41,25 @@ def getAndPostRepoLanguageData(owner, name):
     langUrl = github + 'repos/' + owner + '/' + name +'/languages'
     PARAMS = {'Content-Type':'application/json'}
     r = requests.get(url = langUrl, params = PARAMS, auth =( user, pw ))
-    fireData = {'progLangs' : r.json(), 'owner': owner, 'repo_name' : name }
-    sent = json.dumps(fireData)
-    result = firebase.post("/languageData", sent)
+    object = r.json()
+    checkIfLangInArrayAndConstruct(dataObj, object)
     return
+
+def checkIfLangInArrayAndConstruct(arr, obj):
+    for (k, v) in obj.items():
+       print("Key: " + k)
+       print("Value: " + str(v))
+       if containsLang(dataObj, k) is False:
+           dataObj[k] = v
+           #Insert key into json obj and set value
+       if containsLang(dataObj, k) is True:
+           dataObj[k] = dataObj[k] + v
+           #Find key and add to value
+
+def containsLang(obj, key):
+    if key in obj:
+        return True
+    return False
 
 user = input('Enter in Github username (or skip for limited querires): ')
 if user != '':
@@ -60,7 +74,7 @@ for i, endpoint in enumerate(sys.argv):
         PARAMS = {'Content-Type':'application/json'}
         # sending get request and saving the response as response object
         j = 0
-        limit = 5
+        limit = 1
         prog = ''
         while j < limit:
             prog = str(j) + '/' + str(limit)
@@ -74,5 +88,10 @@ for i, endpoint in enumerate(sys.argv):
                 #print('Recieved data: ', json.dumps(data, sort_keys=True, indent=4))
                 processRepoData(data)
             j = j + 1
-        prog = str(limit) + '/' + str(limit)
+            prog = str(limit) + '/' + str(limit)
+        print(dataObj)
+        print("Posting shcraped data to db...")
+        fireData = {'progLangs' : r.json(), 'owner': owner, 'repo_name' : name }
+        sent = json.dumps(fireData)
+        result = firebase.post("/languageData", sent)
 print("Done!")

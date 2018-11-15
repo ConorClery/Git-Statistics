@@ -1,1 +1,1 @@
-search/users?q=location:ireland&per_page=100
+search/users?q=location:ireland&per_page=2
