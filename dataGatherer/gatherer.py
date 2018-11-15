@@ -11,25 +11,30 @@ user = ''
 pw = ''
 dataObj = {}
 
+def progress(count, total, status=''):
+    bar_len = 60
+    filled_len = int(round(bar_len * count / float(total)))
+
+    percents = round(100.0 * count / float(total), 1)
+    bar = '=' * filled_len + '-' * (bar_len - filled_len)
+
+    print('[%s] %s%s ...%s' % (bar, percents, '%', status), end='\r')
+    sys.stdout.flush() # As suggested by Rom Ruben (see: http://stackoverflow.com/questions/3173320/text-progress-bar-in-the-console/27871113#comment50529068_27871113)
+
 def processRepoData( data ):
     dataLength = len(data["items"])
-    print("Current Data Progress: 0/", dataLength)
+    numOut = 0
     for element in data["items"]:
-        numOut = 0
         num = 0
         repUrl = element["repos_url"]
         repoData = getRepoData( repUrl )
         repoLength = len(repoData)
-        print("Posting data from", repoLength, "repositories...")
-        print("Current User Progress: 0/", repoLength)
         for repo in repoData:
             getAndPostRepoLanguageData(repo["owner"]["login"], repo["name"])
             num = num + 1
-            woops = str(num) + '/' + str(repoLength)
-            print("Current User Progress:", woops)
+            strang = "Inspecting Code of repositories of user " + str(numOut)
+            progress(num, repoLength, strang)
         numOut = numOut + 1
-        noops = str(numOut) + "/" + str(dataLength)
-        print("Current Data Progress:", noops)
     return
 
 def getRepoData( repUrl ):
@@ -47,8 +52,6 @@ def getAndPostRepoLanguageData(owner, name):
 
 def checkIfLangInArrayAndConstruct(arr, obj):
     for (k, v) in obj.items():
-       print("Key: " + k)
-       print("Value: " + str(v))
        if containsLang(dataObj, k) is False:
            dataObj[k] = v
            #Insert key into json obj and set value
@@ -74,24 +77,22 @@ for i, endpoint in enumerate(sys.argv):
         PARAMS = {'Content-Type':'application/json'}
         # sending get request and saving the response as response object
         j = 0
-        limit = 1
+        limit = 10
         prog = ''
         while j < limit:
             prog = str(j) + '/' + str(limit)
-            print('Overall Progress:', prog)
+            print('Overall Progress:', prog, '\n\n')
             page = '&page=' + str(j)
             r = requests.get(url = URL + (page), params = PARAMS, auth =( user, pw ))
-            print(r.status_code)
             contentType = r.headers['Content-Type'].split(';')
             if contentType[0] == 'application/json':
                 data = r.json()
-                #print('Recieved data: ', json.dumps(data, sort_keys=True, indent=4))
                 processRepoData(data)
             j = j + 1
             prog = str(limit) + '/' + str(limit)
         print(dataObj)
         print("Posting shcraped data to db...")
-        fireData = {'progLangs' : r.json(), 'owner': owner, 'repo_name' : name }
+        fireData = {'progLangs' : dataObj}
         sent = json.dumps(fireData)
         result = firebase.post("/languageData", sent)
 print("Done!")
