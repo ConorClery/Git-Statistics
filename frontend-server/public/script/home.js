@@ -1,11 +1,7 @@
 $(document).ready(function() {
-  const Http = new XMLHttpRequest();
-  const url='https://swengdb.firebase.io/lmao';
-  Http.open("GET", url);
-  Http.send();
-  Http.onreadystatechange=(e)=>{
-    console.log(Http.responseText)
-  }
+
+  console.log(progLangData);
+
   data = {
       datasets: [{
           data: [10, 20, 30]
@@ -13,7 +9,7 @@ $(document).ready(function() {
 
       // These labels appear in the legend and in the tooltips when hovering different arcs
       labels: [
-          'Red',
+          moopData,
           'Yellow',
           'Blue'
       ],

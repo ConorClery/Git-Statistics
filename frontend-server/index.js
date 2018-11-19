@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 const request = require("request")
 const router = express.Router();
 
+app.use(express.static(path.join(__dirname + 'node_modules')));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(bodyParser.urlencoded({
