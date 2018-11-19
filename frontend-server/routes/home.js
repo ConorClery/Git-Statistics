@@ -26,9 +26,9 @@ router.get('/', function(req, res) {
 
     // Attach an asynchronous callback to read the data at our posts reference
     ref.on("value", function(snapshot) {
-      console.log(snapshot.val());
+      const data = snapshot.val();
       res.render('../public/page/home', {"moop":"moop",
-                                         "languageData": snapshot.val()});
+                                         "languageData": data});
     }, function (errorObject) {
       console.log("The read failed: " + errorObject.code);
       res.render('../public/page/home');

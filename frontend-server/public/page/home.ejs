@@ -8,10 +8,6 @@
     <link rel="stylesheet" href="/css/home.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.bundle.js" integrity="sha256-o8aByMEvaNTcBsw94EfRLbBrJBI+c3mjna/j4LrfyJ8=" crossorigin="anonymous"></script>
     <!-- Define vars to pass into javascript below... -->
-    <script>
-      var moopData = "<%- locals.moop %>";
-      var progLangData = "<%= locals.languageData %>"
-    </script>
   </head>
   <body>
     <div class="jumbotron vertical-center">
@@ -31,7 +27,7 @@
                 </div>
 
                 <div class="col col-8">
-                  <canvas id="myChart" width="400" height="175"></canvas>
+                  <canvas id="myChart" width="100" height="75"></canvas>
                 </div>
             </div>
         </div>
@@ -42,5 +38,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <script src="./script/home.js"></script>
+    <!-- define js variables... -->
+    <script>
+      var moopData = "<%- locals.moop %>";
+      var progLangData = <%- locals.languageData %>;
+      generateGraph(moopData, progLangData.progLangs);
+    </script>
   </body>
 </html>

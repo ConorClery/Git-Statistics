@@ -1,28 +1,31 @@
 $(document).ready(function() {
 
-  console.log(progLangData);
+
+
+});
+
+function generateGraph(moop, graphData) {
+  console.log(graphData);
+  var nums = [];
+  var labels = [];
+  var colors = [];
+  Object.keys(graphData).forEach(function(key) {
+    console.log(key + ' : ' + graphData[key]);
+    labels.push(key);
+    nums.push(graphData[key]);
+    col = '#'+(Math.random()*0xFFFFFF<<0).toString(16);
+    colors.push(col)
+  });
 
   data = {
       datasets: [{
-          data: [10, 20, 30]
+          data: nums,
+          backgroundColor: colors,
+        borderColor: colors
       }],
 
       // These labels appear in the legend and in the tooltips when hovering different arcs
-      labels: [
-          moopData,
-          'Yellow',
-          'Blue'
-      ],
-      backgroundColor: [
-                  'rgba(255, 99, 132, 0.2)',
-                  'rgba(54, 162, 235, 0.2)',
-                  'rgba(255, 206, 86, 0.2)'
-      ],
-      borderColor: [
-                 'rgba(255,99,132,1)',
-                 'rgba(54, 162, 235, 1)',
-                 'rgba(255, 206, 86, 1)'
-     ]
+      labels: labels,
   };
 
 
@@ -30,7 +33,10 @@ $(document).ready(function() {
   var myDoughnutChart = new Chart(ctx, {
     type: 'doughnut',
     data: data,
-    options: {}
+    options: {
+      legend: {
+        display: false
+      }
+    }
   });
-
-});
+}
