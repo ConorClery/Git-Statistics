@@ -1,0 +1,6 @@
+{
+  "DEFAULT" : {
+    "firebase_endpoint" :  "https://swengdb.firebaseio.com/",
+    "firebase_collection" : "/languageData"
+  }
+}

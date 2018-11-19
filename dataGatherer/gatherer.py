@@ -2,9 +2,13 @@ import requests
 import sys
 import getpass
 import json
+import configparser
 from firebase import firebase
+config = {}
+with open('config.json', 'r') as f:
+    config = json.load(f)
 
-firebaseEndpoint = 'https://swengdb.firebaseio.com/'
+firebaseEndpoint = config["DEFAULT"]["firebase_endpoint"]
 firebase = firebase.FirebaseApplication(firebaseEndpoint, None)
 github = 'https://api.github.com/'
 user = ''
@@ -94,5 +98,5 @@ for i, endpoint in enumerate(sys.argv):
         print("Posting shcraped data to db...")
         fireData = {'progLangs' : dataObj}
         sent = json.dumps(fireData)
-        result = firebase.post("/languageData", sent)
+        result = firebase.post(config["DEFAULT"]["firebase_collection"], sent)
 print("Done!")
