@@ -1,17 +1,18 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const firebase = require('firebase');
+const config = require('../config.json');
 // Initialize Firebase
 // Initialize Firebase
-var config = {
-  apiKey: "AIzaSyDoC0UaSQg6MJ7KHQCFny7hp6TGlk7zEi8",
-  authDomain: "swengdb.firebaseapp.com",
-  databaseURL: "https://swengdb.firebaseio.com",
-  projectId: "swengdb",
-  storageBucket: "swengdb.appspot.com",
-  messagingSenderId: "766339450185"
+var firebaseConfig = {
+  apiKey:config.apiKey,
+  authDomain: config.authDomain,
+  databaseURL: config.databaseURL,
+  projectId: config.projectId,
+  storageBucket: config.projectId,
+  messagingSenderId: config.messagingSenderId
 };
-firebase.initializeApp(config);
+firebase.initializeApp(firebaseConfig);
 
 
 const router = express.Router();
